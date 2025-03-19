@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "somesh1035/somesh-v//test" // Replace with your Docker Hub username and image name
+        IMAGE_NAME = "somesh1035/test" // Corrected Docker Hub image name
         TAG = "latest"
         CONTAINER_NAME = "my-container"
         PORT = "3001"
@@ -13,7 +13,10 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo "Cloning GitHub repository..."
-                git 'https://github.com/somesh-v/docker_task2.git' // Replace with your repo URL
+                checkout([$class: 'GitSCM',
+                    branches: [[name: '*/main']],  // Change to '*/master' if needed
+                    userRemoteConfigs: [[url: 'https://github.com/somesh-v/docker_task2.git']]
+                ])
             }
         }
 
@@ -25,11 +28,11 @@ pipeline {
             }
         }
 
-                stage('Login to Docker Hub') {
+        stage('Login to Docker Hub') {
             steps {
                 echo "Logging into Docker Hub..."
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh 'docker login -u $DOCKER_USER -p $DOCKER_PASS'
+                    sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                 }
             }
         }
