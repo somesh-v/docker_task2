@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "somesh1035/test" // Corrected Docker Hub image name
+        IMAGE_NAME = "somesh1035/somesh-v" // Corrected Docker Hub image name
         TAG = "latest"
         CONTAINER_NAME = "my-container"
         PORT = "3001"
